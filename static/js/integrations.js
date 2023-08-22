@@ -9,7 +9,7 @@ const gitleaksIntegration = {
         class="modal modal-small fixed-left fade shadow-sm" tabindex="-1" role="dialog"
     >
         <ModalDialog
-            v-model:description="description"
+            v-model:name="config.name"
             v-model:is_default="is_default"
             @update="update"
             @create="create"
@@ -73,7 +73,7 @@ const gitleaksIntegration = {
 
                 </div>
 
-            
+
                 <h9>Save intermediates to</h9>
                 <p>
                     <h13>Optional</h13>
@@ -93,7 +93,7 @@ const gitleaksIntegration = {
                        v-model="additional_text"
                        :class="{ 'is-invalid': error.scan_opts }">
                 <div class="invalid-feedback">[[ error.scan_opts ]]</div>
-        
+
                 <h9>Path to custom rules</h9>
                 <p>
                     <h13>Optional</h13>
@@ -108,7 +108,7 @@ const gitleaksIntegration = {
         </template>
         <template #footer>
             <test-connection-button
-                    :apiPath="api_base + 'check_settings'"
+                    :apiPath="this.$root.build_api_url('integrations', 'check_settings') + '/' + pluginName"
                     :error="error.check_connection"
                     :body_data="body_data"
                     v-model:is_fetching="is_fetching"
@@ -128,15 +128,12 @@ const gitleaksIntegration = {
         })
     },
     computed: {
-        apiPath() {
-            return this.api_base + 'integration/'
-        },
         project_id() {
             return getSelectedProjectId()
         },
         body_data() {
             const {
-                description,
+                config,
                 is_default,
                 project_id,
 
@@ -154,7 +151,7 @@ const gitleaksIntegration = {
                 status,
             } = this
             return {
-                description,
+                config,
                 is_default,
                 project_id,
                 save_intermediates_to,
@@ -192,17 +189,21 @@ const gitleaksIntegration = {
         },
         handleEdit(data) {
             console.debug('gitleaks editIntegration', data)
-            const {description, is_default, id, settings} = data
-            this.load({...settings, description, is_default, id})
+            const {config, is_default, id, settings} = data
+            this.load({...settings, config, is_default, id})
             this.modal.modal('show')
         },
         handleDelete(id) {
             this.load({id})
             this.delete()
         },
+        handleSetDefault(id, local=true) {
+            this.load({id})
+            this.set_default(local)
+        },
         create() {
             this.is_fetching = true
-            fetch(this.apiPath + this.pluginName, {
+            fetch(this.api_url + this.pluginName, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(this.body_data)
@@ -232,7 +233,7 @@ const gitleaksIntegration = {
         },
         update() {
             this.is_fetching = true
-            fetch(this.apiPath + this.id, {
+            fetch(this.api_url + this.id, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(this.body_data)
@@ -248,7 +249,7 @@ const gitleaksIntegration = {
         },
         delete() {
             this.is_fetching = true
-            fetch(this.apiPath + this.id, {
+            fetch(this.api_url + this.project_id + '/' + this.id, {
                 method: 'DELETE',
             }).then(response => {
                 this.is_fetching = false
@@ -261,8 +262,29 @@ const gitleaksIntegration = {
                 }
             })
         },
+        async set_default(local) {
+            this.is_fetching = true
+            try {
+                const resp = await fetch(this.api_url + this.project_id + '/' + this.id, {
+                    method: 'PATCH',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({local})
+                })
+                if (resp.ok) {
+                    this.$emit('update', {...this.$data, section_name: this.section_name})
+                } else {
+                    const error_data = await resp.json()
+                    this.handleError(error_data)
+                }
+            } catch (e) {
+                console.error(e)
+                showNotify('ERROR', 'Error setting as default')
+            } finally {
+                this.is_fetching = false
+            }
+        },
         initialState: () => ({
-            description: '',
+            config: {},
             is_default: false,
             is_fetching: false,
             error: {},
@@ -280,7 +302,7 @@ const gitleaksIntegration = {
             commit_line_limit: 15,
 
             pluginName: 'security_scanner_gitleaks',
-            api_base: '/api/v1/integrations/',
+            api_url: V.build_api_url('integrations', 'integration') + '/',
             status: integration_status.success,
         }),
     }

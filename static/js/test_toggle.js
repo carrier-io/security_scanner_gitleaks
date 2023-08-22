@@ -8,12 +8,12 @@ const GitleaksIntegration = {
     computed: {
         body_data() {
             const {
-                description,
+                config,
                 is_default,
                 selected_integration: id,
 
                 save_intermediates_to,
-                
+
                 squash_commits,
                 show_offender_line,
                 redact_offenders,
@@ -25,7 +25,7 @@ const GitleaksIntegration = {
                 commit_line_limit,
             } = this
             return {
-                description,
+                config,
                 is_default,
                 id,
 
@@ -81,6 +81,7 @@ const GitleaksIntegration = {
 
         initialState: () => ({
             // toggle: false,
+            config: {},
             error: {},
             save_intermediates_to: '/data/intermediates/sast',
 
@@ -190,7 +191,7 @@ const GitleaksIntegration = {
                         v-model="custom_rules_path"
                         :class="{ 'is-invalid': error.scan_path }">
                     <div class="invalid-feedback">[[ error.scan_path ]]</div>
-                </form>         
+                </form>
             </div>
         </div>
     `
@@ -198,4 +199,3 @@ const GitleaksIntegration = {
 
 
 register_component('scanner-gitleaks', GitleaksIntegration)
-
