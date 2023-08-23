@@ -74,7 +74,7 @@ const gitleaksIntegration = {
                 </div>
 
 
-                <h9>Save intermediates to</h9>
+                <!--<h9>Save intermediates to</h9>
                 <p>
                     <h13>Optional</h13>
                 </p>
@@ -82,7 +82,7 @@ const gitleaksIntegration = {
                        placeholder=""
                        v-model="save_intermediates_to"
                        :class="{ 'is-invalid': error.save_intermediates_to }">
-                <div class="invalid-feedback">[[ error.save_intermediates_to ]]</div>
+                <div class="invalid-feedback">[[ error.save_intermediates_to ]]</div>-->
 
                 <h9>Additional text</h9>
                 <p>
@@ -137,7 +137,7 @@ const gitleaksIntegration = {
                 is_default,
                 project_id,
 
-                save_intermediates_to,
+                // save_intermediates_to,
                 squash_commits,
                 show_offender_line,
                 redact_offenders,
@@ -154,7 +154,7 @@ const gitleaksIntegration = {
                 config,
                 is_default,
                 project_id,
-                save_intermediates_to,
+                // save_intermediates_to,
                 squash_commits,
                 show_offender_line,
                 redact_offenders,
@@ -291,7 +291,7 @@ const gitleaksIntegration = {
             test_connection_status: 0,
             id: null,
 
-            save_intermediates_to: '/data/intermediates/sast',
+            // save_intermediates_to: '/data/intermediates/sast',
             squash_commits:false,
             show_offender_line: true,
             redact_offenders: false,

@@ -12,7 +12,7 @@ const GitleaksIntegration = {
                 is_default,
                 selected_integration: id,
 
-                save_intermediates_to,
+                // save_intermediates_to,
 
                 squash_commits,
                 show_offender_line,
@@ -29,7 +29,7 @@ const GitleaksIntegration = {
                 is_default,
                 id,
 
-                save_intermediates_to,
+                // save_intermediates_to,
 
                 squash_commits,
                 show_offender_line,
@@ -83,7 +83,7 @@ const GitleaksIntegration = {
             // toggle: false,
             config: {},
             error: {},
-            save_intermediates_to: '/data/intermediates/sast',
+            // save_intermediates_to: '/data/intermediates/sast',
 
             squash_commits:false,
             show_offender_line: false,
@@ -162,7 +162,7 @@ const GitleaksIntegration = {
 
                     </div>
 
-                    <h9>Save intermediates to</h9>
+                    <!--<h9>Save intermediates to</h9>
                     <p>
                         <h13>Optional</h13>
                     </p>
@@ -170,7 +170,7 @@ const GitleaksIntegration = {
                         placeholder=""
                         v-model="save_intermediates_to"
                         :class="{ 'is-invalid': error.save_intermediates_to }">
-                    <div class="invalid-feedback">[[ error.save_intermediates_to ]]</div>
+                    <div class="invalid-feedback">[[ error.save_intermediates_to ]]</div>-->
 
                     <h9>Additional text</h9>
                     <p>
